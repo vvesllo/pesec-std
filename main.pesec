@@ -1,7 +1,0 @@
-const io = import "./std/io.pesec";
-
-io.print("Hello world!\n");
-
-const file = io.open("test.txt", "w");
-file.write("Hello world!");
-file.close();
