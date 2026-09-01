@@ -25,4 +25,4 @@ target_include_directories(pesec_core PUBLIC
 )
 
 add_subdirectory(io)
-# add_subdirectory(math)
+add_subdirectory(math)
