@@ -6,6 +6,90 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+PESEC_SDK_FUNCTION_DEFINE(read)
+{
+    const value_t fd_value = PESEC_SDK_FUNCTION_ARG("fd");
+    const value_t size_value = PESEC_SDK_FUNCTION_ARG("size");
+
+    if (!pesec_sdk_is_number(fd_value)) return pesec_sdk_to_boolean_value(false);
+    if (!pesec_sdk_is_number(size_value)) return pesec_sdk_to_boolean_value(false);
+
+    const int fd = (int)number_value_to_long_double(fd_value.data.as_number);
+    const auto size = (ull_t)number_value_to_long_double(size_value.data.as_number);
+
+    if (size == 0)
+        return pesec_sdk_to_string_value_from_cstr("");
+
+    const auto buffer = (char*)malloc(size + 1);
+    if (!buffer)
+        return pesec_sdk_to_boolean_value(false);
+
+    const ssize_t bytes_read = read(fd, buffer, size);
+    if (bytes_read < 0)
+    {
+        free(buffer);
+        return pesec_sdk_to_boolean_value(false);
+    }
+
+    buffer[bytes_read] = '\0';
+
+    const value_t result = pesec_sdk_to_string_value(buffer, size);
+
+    free(buffer);
+    return result;
+}
+
+PESEC_SDK_FUNCTION_DEFINE(read_line)
+{
+    const value_t fd_value = PESEC_SDK_FUNCTION_ARG("fd");
+
+    if (!pesec_sdk_is_number(fd_value)) return pesec_sdk_to_boolean_value(false);
+
+    const int fd = (int)number_value_to_long_double(fd_value.data.as_number);
+
+    size_t capacity = 256;
+    size_t length = 0;
+    auto buffer = (char*)malloc(capacity);
+
+    if (!buffer)
+        return pesec_sdk_to_boolean_value(false);
+
+    char c;
+    ssize_t bytes_read;
+
+    while ((bytes_read = read(fd, &c, 1)) == 1)
+    {
+        if (length >= capacity - 1)
+        {
+            capacity *= 2;
+            const auto new_buffer = (char*)realloc(buffer, capacity);
+            if (!new_buffer)
+            {
+                free(buffer);
+                return pesec_sdk_to_boolean_value(false);
+            }
+            buffer = new_buffer;
+        }
+
+        buffer[length++] = c;
+        if (c == '\n')
+            break;
+    }
+
+    if (length == 0 && bytes_read == 0)
+    {
+        free(buffer);
+        return pesec_sdk_to_string_value_from_cstr("");
+    }
+
+    buffer[length] = '\0';
+
+    const value_t result = pesec_sdk_to_string_value(buffer, length);
+
+    free(buffer);
+    return result;
+}
+
 PESEC_SDK_FUNCTION_DEFINE(write)
 {
     const value_t fd_value = PESEC_SDK_FUNCTION_ARG("fd");
@@ -68,6 +152,8 @@ PESEC_SDK_FUNCTION_DEFINE(close)
 __attribute__((visibility("default")))
 void pesec_module_init(context_t *context)
 {
+    PESEC_SDK_FUNCTION_REGISTER(read, "fd", "size");
+    PESEC_SDK_FUNCTION_REGISTER(read_line, "fd");
     PESEC_SDK_FUNCTION_REGISTER(write, "fd", "data");
     PESEC_SDK_FUNCTION_REGISTER(open, "filename", "mode");
     PESEC_SDK_FUNCTION_REGISTER(close, "fd");
