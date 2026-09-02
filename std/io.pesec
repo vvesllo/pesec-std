@@ -1,8 +1,8 @@
 const libpesec_io = if (__platform == "linux")
-    import "./std/libpesec_io.so"
-else false;
+    import "../std/libpesec_io.so"
+else null;
 
-if (libpesec_io == false) throw "Unsupported platform";
+if (!libpesec_io) panic "Unsupported platform";
 
 const stdin  = 0;
 const stdout = 1;
@@ -23,7 +23,7 @@ const open = fn(path, mode) {
             if (this.is_open) {
                 this.libpesec_io.write(this.fd, data);
             } else {
-                throw "Stream is closed";
+                panic "Stream is closed";
             };
         };
 
@@ -31,7 +31,7 @@ const open = fn(path, mode) {
             if (this.is_open) {
                 this.libpesec_io.read(this.fd, size);
             } else {
-                throw "Stream is closed";
+                panic "Stream is closed";
             };
         };
 

@@ -1,5 +1,6 @@
 #include "../include/sdk.h"
 
+#include "include/string_value.h"
 
 
 string_view_t pesec_sdk_to_string_view(const char* value)

@@ -1,12 +1,8 @@
 #include "../include/module.h"
 
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
 
-PESEC_SDK_FUNCTION_DEFINE(write)
+PESEC_SDK_FUNCTION_DEFINE(pow)
 {
     const value_t fd_value = PESEC_SDK_FUNCTION_ARG("fd");
     const value_t data_value = PESEC_SDK_FUNCTION_ARG("data");
@@ -25,5 +21,5 @@ PESEC_SDK_FUNCTION_DEFINE(write)
 __attribute__((visibility("default")))
 void pesec_module_init(context_t *context)
 {
-    PESEC_SDK_FUNCTION_REGISTER(write, "fd", "data");
+    PESEC_SDK_FUNCTION_REGISTER(pow, "fd", "data");
 }

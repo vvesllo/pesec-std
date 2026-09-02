@@ -5,7 +5,9 @@
 #include <include/value.h>
 #include <include/array_value.h>
 #include <include/structure_value.h>
+#include <include/string_value.h>
 #include <include/module_value.h>
+#include <include/number_value.h>
 #include <include/function_value.h>
 #include <include/array_value.h>
 #include <stdlib.h>
