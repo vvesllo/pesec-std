@@ -57,6 +57,83 @@ value_t pesec_sdk_to_module_value(context_t* context)
     return value_new_module(module_value_new(context));
 }
 
+value_t pesec_sdk_to_boolean_value_cf(const bool value, const control_flow_t control_flow)
+{
+    value_t result = pesec_sdk_to_boolean_value(value);
+    result.control_flow = control_flow;
+    return result;
+}
+
+value_t pesec_sdk_to_number_value_cf(const long double value, const control_flow_t control_flow)
+{
+    value_t result = pesec_sdk_to_number_value(value);
+    result.control_flow = control_flow;
+    return result;
+}
+
+value_t pesec_sdk_to_string_value_cf(char* data, const ull_t size, const control_flow_t control_flow)
+{
+    value_t result = pesec_sdk_to_string_value(data, size);
+    result.control_flow = control_flow;
+    return result;
+}
+
+value_t pesec_sdk_to_string_value_from_cstr_cf(const char* data, const control_flow_t control_flow)
+{
+    value_t result = pesec_sdk_to_string_value_from_cstr(data);
+    result.control_flow = control_flow;
+    return result;
+}
+
+value_t pesec_sdk_to_function_value_cf(
+    parameter_t* parameter,
+    const function_value_value_t body,
+    const function_value_type_t type,
+    context_t* parent_context,
+    const control_flow_t control_flow)
+{
+    value_t result = pesec_sdk_to_function_value(
+        parameter,
+        body,
+        type,
+        parent_context
+    );
+    result.control_flow = control_flow;
+    return result;
+}
+
+value_t pesec_sdk_to_array_value_cf(value_t* data, const ull_t size, const control_flow_t control_flow)
+{
+    value_t result = pesec_sdk_to_array_value(data, size);
+    result.control_flow = control_flow;
+    return result;
+}
+
+value_t pesec_sdk_to_structure_value_cf(context_t* context, const control_flow_t control_flow)
+{
+    value_t result = pesec_sdk_to_structure_value(context);
+    result.control_flow = control_flow;
+    return result;
+}
+
+value_t pesec_sdk_to_module_value_cf(context_t* context, const control_flow_t control_flow)
+{
+    value_t result = pesec_sdk_to_module_value(context);
+    result.control_flow = control_flow;
+    return result;
+}
+
+value_t pesec_sdk_null_value()
+{
+    return value_new_null();
+}
+
+value_t pesec_sdk_null_value_cf(const control_flow_t control_flow)
+{
+    value_t result = pesec_sdk_null_value();
+    result.control_flow = control_flow;
+    return result;
+}
 
 bool pesec_sdk_is_boolean(const value_t value) { return value.type == VALUE_TYPE_BOOLEAN; }
 
@@ -71,3 +148,5 @@ bool pesec_sdk_is_array(const value_t value) { return value.type == VALUE_TYPE_A
 bool pesec_sdk_is_structure(const value_t value) { return value.type == VALUE_TYPE_STRUCTURE; }
 
 bool pesec_sdk_is_module(const value_t value) { return value.type == VALUE_TYPE_MODULE; }
+
+bool pesec_sdk_is_null(const value_t value) { return value.type == VALUE_TYPE_NULL; }
